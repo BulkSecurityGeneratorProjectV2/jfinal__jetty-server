@@ -24,6 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -208,7 +209,7 @@ public class WebInfConfiguration extends AbstractConfiguration
     @Override
     public void cloneConfigure(WebAppContext template, WebAppContext context) throws Exception
     {
-        File tmpDir=File.createTempFile(WebInfConfiguration.getCanonicalNameForWebAppTmpDir(context),"",template.getTempDirectory().getParentFile());
+        File tmpDir=Files.createTempFile(template.getTempDirectory().getParentFile().toPath(),WebInfConfiguration.getCanonicalNameForWebAppTmpDir(context),"").toFile();
         if (tmpDir.exists())
         {
             IO.delete(tmpDir);
@@ -315,7 +316,7 @@ public class WebInfConfiguration extends AbstractConfiguration
             try
             {
                 // Last resort
-                tmpDir=File.createTempFile("JettyContext","");
+                tmpDir=Files.createTempFile("JettyContext","").toFile();
                 if (tmpDir.exists())
                     IO.delete(tmpDir);
                 tmpDir.mkdir();
@@ -374,7 +375,7 @@ public class WebInfConfiguration extends AbstractConfiguration
                 if (tmpDir.exists())
                 {
                     String old=tmpDir.toString();
-                    tmpDir=File.createTempFile(temp+"_","");
+                    tmpDir=Files.createTempFile(temp + "_","").toFile();
                     if (tmpDir.exists())
                         IO.delete(tmpDir);
                     LOG.warn("Can't reuse "+old+", using "+tmpDir);
